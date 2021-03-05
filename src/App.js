@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, lazy, useState } from "react";
+import Header from "./components/Header";
+import Home from "./pages/Home";
+import { Router } from "@reach/router";
+import Footer from "./components/Footer";
+import State from "./components/State";
+import { Container } from "react-bootstrap";
 
-function App() {
+const SeriesLoading = lazy(() => import("./pages/Series"));
+const MoviesLoading = lazy(() => import("./pages/Movies"));
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <Suspense
+        fallback={
+          <Container className="d-flex flex-wrap justify-content-center mt-5 mb-5">
+            <State message="Loading, please wait" variant="primary" />
+          </Container>
+        }
+      >
+        <Router>
+          <Home path="/" />
+          <SeriesLoading path="/series" />
+          <MoviesLoading path="/movies" />
+        </Router>
+      </Suspense>
+      <Footer />
+    </>
   );
-}
+};
 
 export default App;
